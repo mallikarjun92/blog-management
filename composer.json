@@ -1,0 +1,20 @@
+{
+    "name": "mallikarjun92/blog-management",
+    "description": "A dynamic blog management system built with Core PHP.",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Core\\": "core/"
+        }
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t public"
+    },
+    "authors": [
+        {
+            "name": "Mallikarjun",
+            "email": "mallikarjun016.rymec@gmail.com"
+        }
+    ]
+}
