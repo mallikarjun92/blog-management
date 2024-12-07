@@ -6,59 +6,69 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: #333;
-    background-color: #f9f9f9;
+    background-color: #f4f4f9;
     margin: 0;
     padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Layout */
 .container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
 }
 
 /* Header */
 header {
-    background: #007BFF;
+    background: linear-gradient(90deg, #4c4cfc, #6767f5);
     color: #fff;
-    padding: 20px 0;
+    padding: 15px 0;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid #3c3ce0;
+    font-size: 1.2rem;
 }
 
 header h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
 }
 
 /* Navigation */
 nav {
-    background: #0056b3;
     display: flex;
     justify-content: center;
-    padding: 10px;
+    padding: 10px 0;
+    background-color: #3c3ce0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 nav a {
     color: #fff;
     text-decoration: none;
-    margin: 0 15px;
-    font-weight: bold;
+    margin: 0 10px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
 }
 
 nav a:hover {
-    text-decoration: underline;
+    background-color: #2b2bb0;
 }
 
 /* Main Content */
 main {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
     margin: 20px 0;
 }
 
@@ -69,9 +79,9 @@ main {
 }
 
 .blog-list li {
-    margin-bottom: 20px;
-    padding: 15px;
-    border-bottom: 1px solid #ddd;
+    margin-bottom: 25px;
+    padding: 20px;
+    border-bottom: 1px solid #ececec;
 }
 
 .blog-list li:last-child {
@@ -79,31 +89,35 @@ main {
 }
 
 .blog-list h3 {
+    font-size: 1.5rem;
+    color: #4c4cfc;
     margin-bottom: 10px;
-    color: #007BFF;
 }
 
 .blog-list p {
     font-size: 1rem;
-    color: #555;
+    color: #666;
+    line-height: 1.5;
 }
 
 /* Buttons */
-.button {
+.btn {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 12px 20px;
     color: #fff;
-    background: #007BFF;
+    background: #4c4cfc;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-size: 1rem;
     text-align: center;
     cursor: pointer;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
 }
 
-.button:hover {
-    background: #0056b3;
+.btn:hover {
+    background: #3c3ce0;
 }
 
 /* Footer */
@@ -112,17 +126,14 @@ footer {
     color: #fff;
     text-align: center;
     padding: 20px 0;
-    margin-top: 20px;
-}
-
-footer p {
     font-size: 0.9rem;
+    margin-top: 20px;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     header h1 {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
 
     nav {
@@ -130,7 +141,8 @@ footer p {
     }
 
     nav a {
-        margin: 10px 5px;
+        margin: 5px;
+        font-size: 0.9rem;
     }
 
     .container {
@@ -138,6 +150,90 @@ footer p {
     }
 
     main {
-        padding: 15px;
+        padding: 20px;
     }
+}
+
+/* Form Styling */
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 25px;
+    border: 1px solid #ececec;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+/* Label Styling */
+form label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Input and Textarea Styling */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f8f8fc;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form textarea:focus {
+    border-color: #4c4cfc;
+    background-color: #fff;
+    outline: none;
+}
+
+/* Textarea Specific */
+form textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+/* Button Styling */
+form button {
+    display: inline-block;
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #4c4cfc;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #3c3ce0;
+}
+
+/* Error and Success Messages */
+form .error {
+    font-size: 14px;
+    color: #e63946;
+    margin-bottom: 10px;
+    display: block;
+}
+
+form .success {
+    font-size: 14px;
+    color: #2a9d8f;
+    margin-bottom: 10px;
+    display: block;
 }
