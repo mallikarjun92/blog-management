@@ -17,23 +17,15 @@ class BlogController extends BaseController
     public function view($id)
     {
         // Fetch the blog post by ID from the database
-        /*$blogModel = new \App\Models\Blog();
+        $blogModel = new \App\Models\Blog();
         $post = $blogModel->getById($id);
 
-        if ($post) {
-            // Display the blog post
-            echo "Title: " . $post['title'] . "<br>";
-            echo "Content: " . $post['content'] . "<br>";
-        } else {
-            echo "Blog post not found.";
-        }*/
-        $blogs = [
-            ['id' => 1, 'title' => 'Blog Post 1', 'content' => 'This is the content of the first post.'],
-            ['id' => 2, 'title' => 'Blog Post 2', 'content' => 'This is the content of the second post.'],
-        ];
-
         // Pass data to template
-        $this->template->render('blog_list.html', ['blogs' => $blogs]);
+        $this->template->render('blogs/blog_list.html', [
+            'blogs' => $post,
+            'title' => 'Home',
+            'header' => 'All Blog Posts'
+        ]);
 
     }
 

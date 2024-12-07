@@ -14,6 +14,26 @@ class Blog
         $this->db = Database::getInstance();
     }
 
+
+    /**
+     * Fetch all the blog posts
+     * 
+     * @param int $limit Number of posts per page.
+     * @param int $offset Offset for pagination.
+     * @return array List of blog posts.
+     */
+    public function getAll($limit = 10, $offset = 0)
+    {
+        $sql = "SELECT * FROM blog_posts LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
     /**
      * Fetch all published blog posts with pagination.
      *

@@ -1,0 +1,12 @@
+{% extends "layout/base.html" %}
+{% block content %}
+    <h2>{{ header }}</h2>
+    <ul>
+        {% foreach blogs as blog %}
+        <li>
+            <h3>{{ blog.title }}</h3>
+            <p>{{ blog.content }}</p>
+        </li>
+        {% endforeach %}
+    </ul>
+{% endblock %}
