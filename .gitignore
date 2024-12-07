@@ -1,1 +1,8 @@
 /vendor/
+.gitignore
+blog-management.iml
+modules.xml
+php.xml
+vcs.xml
+codeStyleConfig..xml
+/.idea/codeStyles/codeStyleConfig.xml

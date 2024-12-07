@@ -7,7 +7,21 @@ use Core\Model;
 
 class User extends Model
 {
+	
+	const ROLE_ADMIN = 'admin';
+	const ROLE_USER = 'user';
+	
+	protected $table = "users";
 
+    public function __construct()
+    {
+        parent::__construct($this->table);
+    }
+
+    /**
+     * @param $username
+     * @return mixed
+     */
     public function findUserByUsername($username)
     {
         $query = "SELECT * FROM users WHERE username = :username";
@@ -26,21 +40,39 @@ class User extends Model
         $stmt->execute();
 
         $user = $stmt->fetch();
-        return $user && $user['role'] === 'admin';
+        return $user && $user['role'] === self::ROLE_ADMIN;
     }
+	
+	public function isUser($userId)
+	{
+		$query = "SELECT role FROM users WHERE id = :id";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(':id', $userId);
+		$stmt->execute();
+		
+		$user = $stmt->fetch();
+		return $user && $user['role'] === self::ROLE_USER;
+	}
 
-    // Method to create a new user
-    public function create($username, $password, $email)
+    /**
+     * @param $email
+     * @return mixed
+     */
+    public function getByEmail($email)
     {
-        $query = "INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, 'admin')";
+        $query = "SELECT * FROM users WHERE email = :email";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
+        return $stmt->fetch();
     }
 
-    // Check if the username already exists
+    /**
+     * Check if the username already exists
+     *
+     * @param $username
+     * @return bool
+     */
     public function usernameExists($username)
     {
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
@@ -50,7 +82,12 @@ class User extends Model
         return $stmt->fetchColumn() > 0;
     }
 
-    // Check if the email already exists
+    /**
+     * Check if the email already exists
+     *
+     * @param $email
+     * @return bool
+     */
     public function emailExists($email)
     {
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
