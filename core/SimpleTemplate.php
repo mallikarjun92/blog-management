@@ -49,13 +49,14 @@ class SimpleTemplate
         }
 
         // Replace variables and handle foreach loops recursively
-        $content = $this->replaceVariablesAndLoops($content, $data);
+        $content = $this->processTemplate($content, $data);
 
         echo $content;
     }
 
-    private function replaceVariablesAndLoops($content, $data)
+    private function processTemplate($content, $data)
     {
+        // Handle {% foreach %}
         $content = preg_replace_callback(
             '/\{% foreach (.*?) as (.*?) %\}(.*?)\{% endforeach %\}/s',
             function ($matches) use ($data) {
@@ -69,16 +70,41 @@ class SimpleTemplate
 
                 $renderedContent = '';
                 foreach ($data[$arrayName] as $item) {
-                    // Create a new data array for the loop iteration, ensuring dot notation works
                     $loopData = array_merge($data, [$itemName => (object)$item]);
-                    $renderedContent .= $this->replaceVariablesAndLoops($loopContent, $loopData);
+                    $renderedContent .= $this->processTemplate($loopContent, $loopData);
                 }
                 return $renderedContent;
             },
             $content
         );
 
-        // Replace variables
+        // Handle {% if %}
+        $content = preg_replace_callback(
+            '/\{% if (.*?) %\}(.*?)(\{% else %\}(.*?))?\{% endif %\}/s',
+            function ($matches) use ($data) {
+                $condition = $matches[1];
+                $ifContent = $matches[2];
+                $elseContent = isset($matches[4]) ? $matches[4] : '';
+
+                // Replace variables in the condition
+                foreach ($data as $key => $value) {
+                    if (is_string($value) || is_numeric($value)) {
+                        $condition = str_replace($key, "'$value'", $condition);
+                    } elseif (is_array($value)) {
+                        $condition = str_replace("count($key)", count($value), $condition);
+                    }
+                }
+
+                // Evaluate the condition safely
+                $result = eval("return ($condition);");
+
+                // Return the appropriate content and strip out template markers
+                return $result ? $ifContent : $elseContent;
+            },
+            $content
+        );
+
+        // Handle variables
         foreach ($data as $key => $value) {
             if (is_string($value)) {
                 $content = str_replace("{{ $key }}", $value, $content);

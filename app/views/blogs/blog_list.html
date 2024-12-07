@@ -1,5 +1,6 @@
 {% extends "layout/base.html" %}
 {% block content %}
+{% if count(blogs) > 0 %}
     <h2>{{ header }}</h2>
     <ul>
         {% foreach blogs as blog %}
@@ -9,4 +10,7 @@
         </li>
         {% endforeach %}
     </ul>
+{% else %}
+    <p>No blog posts available.</p>
+{% endif %}
 {% endblock %}

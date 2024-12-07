@@ -10,7 +10,15 @@ class BlogController extends BaseController
     public function index()
     {
         // Placeholder: Fetch posts from the database and display them
-        echo "Displaying a list of blog posts with pagination.";
+        $blogModel = new \App\Models\Blog();
+        $posts = $blogModel->getAllPublished();
+
+        // Pass data to template
+        $this->template->render('blogs/blog_list.html', [
+            'blogs' => $posts ? $posts : [],
+            'title' => 'Home Page',
+            'header' => 'All Published Blog Posts'
+        ]);
     }
 
     // Display a single blog post along with comments
@@ -22,7 +30,7 @@ class BlogController extends BaseController
 
         // Pass data to template
         $this->template->render('blogs/blog_list.html', [
-            'blogs' => $post,
+            'blogs' => $post ? $post : [],
             'title' => 'Home',
             'header' => 'All Blog Posts'
         ]);
