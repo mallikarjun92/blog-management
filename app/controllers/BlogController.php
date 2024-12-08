@@ -3,11 +3,12 @@
 namespace App\Controllers;
 
 use Core\BaseController;
+use Core\Request;
 
 class BlogController extends BaseController
 {
     // Display a list of published blog posts with pagination
-    public function index()
+    public function index(Request $request)
     {
         // Placeholder: Fetch posts from the database and display them
         $blogModel = new \App\Models\Blog();
@@ -38,7 +39,7 @@ class BlogController extends BaseController
     }
 
     // Handle the creation of a new blog post
-    public function create()
+    /*public function create()
     {
         // Placeholder: Display a form to create a new blog post or handle form submission
         echo "Creating a new blog post.";
@@ -56,5 +57,5 @@ class BlogController extends BaseController
     {
         // Placeholder: Delete the blog post with the given ID
         echo "Deleting the blog post with ID: $id.";
-    }
+    }*/
 }

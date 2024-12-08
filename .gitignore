@@ -8,3 +8,4 @@ codeStyleConfig..xml
 /.idea/codeStyles/codeStyleConfig.xml
 mails/
 /cache
+/public/uploads

@@ -4,12 +4,12 @@
 	
 	use App\Models\Blog;
 	use App\Models\User;
+	use App\services\BlogDataService;
 	use App\Services\EmailService;
 	use Core\BaseController;
 	use Core\Form;
 	use Core\Request;
 	use Core\Session;
-	use JetBrains\PhpStorm\NoReturn;
 	
 	class AdminController extends BaseController
 	{
@@ -44,9 +44,9 @@
 			
 			$this->render(
 				'auth/login.html', [
-				'form'   => $form->render(),
-				'title'  => 'Login',
-				'errors' => $form->getErrors()
+				'form'      => $form->render(),
+				'title' => 'Login',
+				'errors'    => $form->getErrors()
 			]);
 		}
 		
@@ -120,6 +120,10 @@
 			$blogModel = new Blog();
 			$blogPosts = $blogModel->getAll();
 			
+			foreach ($blogPosts as &$post) {
+				$post = (new BlogDataService())->getBlogDataForDashboard($post);
+			}
+			
 			$placeholders = [
 				'title' => 'Admin Dashboard',
 				'posts' => $blogPosts,
@@ -146,7 +150,7 @@
 			$form->handle($request);
 			
 			if ($form->isSubmitted() && $form->validate($request)) {
-				$formData = $request->getFormData();
+				$formData = $form->getFormData();
 				
 				// send password recover email
 				$mailService = new EmailService();
@@ -193,17 +197,24 @@
 						$formData       = $form->getFormData();
 						$hashedPassword = password_hash($formData['password'], PASSWORD_BCRYPT);
 						
-						$userModel->update($user['id'], ['password' => $hashedPassword]);
-						
-						Session::set('message', 'Your password has been reset. Please login.');
-						
-						$this->redirect('/admin/login');
+						if ($formData['password'] != $formData['password2']) {
+							
+							$form->addError('Passwords do not match');
+						} else {
+							
+							$userModel->update($user['id'], ['password' => $hashedPassword]);
+							
+							Session::set('message', 'Your password has been reset. Please login.');
+							
+							$this->redirect('/admin/login');
+						}
 					}
 					
 					$this->render(
 						'auth/reset_password.html', [
 						'form'  => $form->render(),
-						'title' => 'Reset Password'
+						'title' => 'Reset Password',
+						'errors' => $form->getErrors()
 					]);
 				}
 				

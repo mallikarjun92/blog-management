@@ -105,4 +105,15 @@
 			return $stmt->fetchColumn() > 0;
 		}
 		
+		public function getUsersByRole($role = self::ROLE_USER): array|false
+		{
+			$sql  = "SELECT * FROM WHERE role = :role " . $this->table;
+			$stmt = $this->db->prepare($sql);
+			
+			$stmt->bindParam(':role', $role);
+			$stmt->execute();
+			
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		
 	}

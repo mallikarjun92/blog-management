@@ -19,9 +19,11 @@ $router = new Router();
 // Public routes
 $router->add('/', 'BlogController', 'index', ['GET']);
 $router->add('/post/{id}', 'BlogController', 'view', ['GET']);
+
+/*
 $router->add('/post/create', 'BlogController', 'create', ['GET', 'POST']);
 $router->add('/post/edit/{id}', 'BlogController', 'edit', ['GET', 'POST']);
-$router->add('/post/delete/{id}', 'BlogController', 'delete', ['POST']);
+$router->add('/post/delete/{id}', 'BlogController', 'delete', ['POST']);*/
 
 // Admin routes
 $router->add('/admin/register', 'AdminController', 'register', ['GET', 'POST']); // Admin login
@@ -30,10 +32,13 @@ $router->add('/admin/logout', 'AdminController', 'logout', ['GET', 'POST']); // 
 $router->add('/admin/dashboard', 'AdminController', 'dashboard', ['GET']); // Admin dashboard
 $router->add('/admin/forgot-password', 'AdminController', 'recoverPassword', ['GET', 'POST']); // Admin forgot password
 $router->add('/reset-password/{resetToken}', 'AdminController', 'resetPassword', ['GET', 'POST']); // reset password
+
+// Blog management
 $router->add('/admin/posts', 'PostController', 'index', ['GET', 'POST']); // Manage blog posts
-$router->add('/admin/posts/create/{id}', 'PostController', 'create', ['GET', 'POST']); // Create a new post
-$router->add('/admin/posts/edit/{id}', 'PostController', 'edit', ['GET', 'POST']); // Edit a post
-$router->add('/admin/posts/delete/{id}', 'PostController', 'delete', ['POST']); // Delete a post
+$router->add('/admin/post/create', 'PostController', 'create', ['GET', 'POST']); // Create a new post
+$router->add('/admin/post/view/{id}', 'PostController', 'show', ['GET']); // Show post
+$router->add('/admin/post/edit/{id}', 'PostController', 'edit', ['GET', 'POST']); // Edit a post
+$router->add('/admin/post/delete/{id}', 'PostController', 'delete', ['GET', 'POST']); // Delete a post
 $router->add('/admin/comments/{id}', 'CommentController', 'moderate', ['GET', 'POST']); // Moderate comments
 $router->add('/admin/users', 'UserController', 'index', ['GET', 'POST']); // Manage users
 

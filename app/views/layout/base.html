@@ -13,8 +13,9 @@
     </header>
     <nav>
         <a href="/">Home</a>
-        <a href="/admin/blog-management">Blog Management</a>
+
         {% if username %}
+            <a href="/admin/posts">Blog Management</a>
             <a href="/admin/logout">Logout</a>
         {% else %}
             <a href="/admin/login">Admin Login</a>
@@ -26,9 +27,9 @@
             {% endblock %}
         </main>
     </div>
-    <footer>
+    <!--<footer>
         <p>&copy; 2024 Dynamic Blog Management System</p>
-    </footer>
+    </footer>-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

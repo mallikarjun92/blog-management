@@ -32,3 +32,9 @@ CREATE TABLE comments (
 ALTER TABLE users
     ADD COLUMN reset_token VARCHAR(45) NULL AFTER last_login,
 ADD COLUMN token_expiry DATETIME NULL AFTER reset_token;
+
+ALTER TABLE `blog_management`.`blog_posts`
+    CHANGE COLUMN `publish_date` `publish_date` DATETIME NULL ;
+
+ALTER TABLE `blog_management`.`blog_posts`
+    CHANGE COLUMN `status` `status` INT NULL DEFAULT 0 ;

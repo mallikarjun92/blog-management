@@ -1,0 +1,32 @@
+{% extends "layout/admin.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title">{{ title }}</h4>
+            </div>
+
+            <div class="card-body">
+                {% foreach data as post %}
+                <div class="post-preview mb-4">
+                    <h5 class="post-title font-weight-bold">{{ post.title }}</h5>
+                    <p class="post-content">{{ post.image_url }}</p>
+                    <p class="post-content">{{ post.content }}</p>
+                    <hr class="my-4">
+
+                    <!-- Display Post Metadata -->
+                    <div class="post-meta text-muted">
+                        <p><strong>Author:</strong> {{ post.author_name }}</p>
+                        <p><strong>Created At:</strong> {{ post.created_at }}<br>
+                        <strong>Published At:</strong> {{ post.published_at }}<br>
+                        <strong>Status:</strong> {{ post.status_text }}</p>
+                    </div>
+                </div>
+                {% endforeach %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

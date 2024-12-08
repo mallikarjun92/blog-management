@@ -4,6 +4,7 @@
     # Redirect all requests to index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/uploads/ [NC]
     RewriteRule ^ index.php [L]
 
     # Optional: Prevent access to .htaccess and sensitive files
