@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+</head>
+<body>
+<header>
+    <h1>Dynamic Blog Management System</h1>
+</header>
+<div class="container">
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</div>
+<footer>
+    <p>&copy; 2024 Dynamic Blog Management System</p>
+</footer>
+</body>
+</html>

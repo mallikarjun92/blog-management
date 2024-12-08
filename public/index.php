@@ -28,6 +28,8 @@ $router->add('/admin/register', 'AdminController', 'register', ['GET', 'POST']);
 $router->add('/admin/login', 'AdminController', 'login', ['GET', 'POST']); // Admin login
 $router->add('/admin/logout', 'AdminController', 'logout', ['GET', 'POST']); // Admin logout
 $router->add('/admin/dashboard', 'AdminController', 'dashboard', ['GET']); // Admin dashboard
+$router->add('/admin/forgot-password', 'AdminController', 'recoverPassword', ['GET', 'POST']); // Admin forgot password
+$router->add('/reset-password/{resetToken}', 'AdminController', 'resetPassword', ['GET', 'POST']); // reset password
 $router->add('/admin/posts', 'PostController', 'index', ['GET', 'POST']); // Manage blog posts
 $router->add('/admin/posts/create/{id}', 'PostController', 'create', ['GET', 'POST']); // Create a new post
 $router->add('/admin/posts/edit/{id}', 'PostController', 'edit', ['GET', 'POST']); // Edit a post

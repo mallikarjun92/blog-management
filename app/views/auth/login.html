@@ -1,16 +1,23 @@
 {% extends "layout/base.html" %}
 {% block content %}
-    <div class="content-container">
-        <h1>Login</h1>
-        <form method="POST" action="" id="form2">
-            <input type="hidden" name="form_id" value="login">
-            <input type="text" name="username" placeholder="Username">
-            <input type="password" name="password" placeholder="Password">
-            <button type="submit" name="submitForm2">Login</button>
-        </form>
-        
-        {% if error %}
-            <p style="color: red;">{{ error }}</p>
-        {% endif %}
+<div class="login text-center">
+    <h1>Login</h1>
+
+    {{ form }}
+
+    {% if count(errors) > 0 %}
+    <ul>
+        {% foreach errors as error %}
+        <li>
+            <p style="color: red;">{{ error.error }}</p>
+        </li>
+        {% endforeach %}
+    </ul>
+    {% endif %}
+
+    <div class="links">
+        <a href="/admin/forgot-password">Forgot Password?</a>
+        <a href="/admin/register">Create an Account</a>
     </div>
+</div>
 {% endblock %}

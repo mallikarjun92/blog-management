@@ -25,8 +25,9 @@ class Router
 
     public function dispatch($url)
     {
-        $url = rtrim($url);  // Remove trailing slashes
-
+	    $url     = rtrim($url);  // Remove trailing slashes
+	    $request = new Request();
+		
         // Match routes with dynamic parameters
         foreach ($this->routes as $routeUrl => $route) {
             // Convert route pattern to regex
@@ -49,7 +50,7 @@ class Router
 
                         // Pass dynamic parameters to the controller action
                         if (method_exists($controller, $actionName)) {
-                            call_user_func_array([$controller, $actionName], $matches);
+                            call_user_func_array([$controller, $actionName], array_merge([$request], $matches));
                         } else {
                             $this->sendNotFound("Action {$actionName} not found.");
                         }

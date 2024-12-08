@@ -2,101 +2,217 @@
 	
 	namespace App\Controllers;
 	
+	use App\Models\Blog;
 	use App\Models\User;
+	use App\Services\EmailService;
 	use Core\BaseController;
+	use Core\Form;
+	use Core\Request;
+	use Core\Session;
+	use JetBrains\PhpStorm\NoReturn;
 	
 	class AdminController extends BaseController
 	{
 		
-		public function login()
+		public function login(Request $request)
 		{
+			$form = new Form();
+			$form->setMethod('POST');
+			$form->setAction('/admin/login');
+			$form->addField('text', 'username', 'Username', null, ['required' => true]);
+			$form->addField('password', 'password', 'Password', null, ['required' => true]);
+			$form->setSubmitButtonName('Login');
 			
-			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$form->handle($request);
+			
+			if ($form->isSubmitted() && $form->validate($request)) {
+				$formData = $form->getFormData();
 				
 				$userModel = new User();
-				$username  = $_POST['username'];
-				$password  = $_POST['password'];
+				$user      = $userModel->findUserByUsername($formData['username']);
 				
-				$user = $userModel->findUserByUsername($username);
-				
-				if ($user && password_verify($password, $user['password']) && $user['role'] === 'admin') {
-					$_SESSION['admin'] = $user['id'];
-					header("Location: /admin/dashboard");
-					exit;
+				if ($user && password_verify($formData['password'], $user['password']) && $user['role'] === User::ROLE_ADMIN) {
+					Session::set('admin', $user['id']);
+					Session::set('username', $formData['username']);
+					$userModel->update($user['id'], ['last_login' => date('Y-m-d H:i:s')]);
+					
+					$this->redirect('/admin/dashboard');
 				} else {
-					$this->render('auth/login.html', ['error' => 'Invalid credentials or unauthorized access', 'title' => 'Login']);
+					$form->addError('Invalid credentials or unauthorized access');
 				}
-				
-			} else {
-				$this->render('auth/login.html', ['title' => 'Login']);
 			}
-		}
-		
-		public function logout()
-		{
-			session_destroy();
-			header("Location: /admin/login");
-			exit;
-		}
-		
-		public function register()
-		{
 			
-			// Check if the form is submitted via POST
-			if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-				// Sanitize inputs
-				$username = isset($_POST['username']) ? trim($_POST['username']) : '';
-				$password = isset($_POST['password']) ? $_POST['password'] : '';
-				$email    = isset($_POST['email']) ? trim($_POST['email']) : '';
+			$this->render(
+				'auth/login.html', [
+				'form'   => $form->render(),
+				'title'  => 'Login',
+				'errors' => $form->getErrors()
+			]);
+		}
+		
+		public function logout(): void
+		{
+			Session::destroy();
+			$this->redirect('/admin/login');
+		}
+		
+		public function register(Request $request)
+		{
+			$form = new Form();
+			
+			$form->setMethod('POST');
+			$form->setAction('/admin/register');
+			$form->addField('text', 'username', 'Username', null, ['required' => true]);
+			$form->addField('email', 'email', 'Email', null, ['required' => true, 'email' => true]);
+			$form->addField('password', 'password', 'Password', null, ['required' => true]);
+			$form->addField('password', 'password2', 'Confirm Password', null, ['required' => true]);
+			$form->setSubmitButtonName('Register');
+			
+			$form->handle($request);
+			
+			if ($form->isSubmitted() && $form->validate($request)) {
+				$formData = $form->getFormData();
 				
-				// Validate inputs
-				if (empty($username) || empty($password) || empty($email)) {
-					$this->render('auth/register.html', ['error' => 'All fields are required', 'title' => 'Register']);
-					return;
-				}
-				
-				if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-					$this->render('auth/register.html', ['error' => 'Invalid email format', 'title' => 'Register']);
-					return;
-				}
-				
-				// Check for existing username and email
 				$userModel = new User();
-				if ($userModel->usernameExists($username)) {
-					$this->render('auth/register.html', ['error' => 'Username is already taken', 'title' => 'Register']);
-					return;
+				
+				if ($userModel->usernameExists($formData['username'])) {
+					$form->addError('Username is already taken');
 				}
 				
-				if ($userModel->emailExists($email)) {
-					$this->render('auth/register.html', ['error' => 'Email is already registered', 'title' => 'Register']);
-					return;
+				if ($userModel->emailExists($formData['email'])) {
+					$form->addError('Email is already registered');
 				}
 				
-				// Hash the password and create the user
-				$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-				$userModel->create(
-					[
-						'username' => $username,
-						'password' => $hashedPassword,
-						'email'    => $email,
-						'role'     => User::ROLE_ADMIN
-					]
-				);
+				if ($formData['password'] != $formData['password2']) {
+					$form->addError('Passwords do not match');
+				}
 				
-				// Redirect to login page after successful registration
-				header("Location: /admin/login");
-				exit;
+				if (empty($form->getErrors())) {
+					$hashedPassword = password_hash($formData['password'], PASSWORD_BCRYPT);
+					$userModel->create(
+						[
+							'username'   => $formData['username'],
+							'password'   => $hashedPassword,
+							'email'      => $formData['email'],
+							'role'       => User::ROLE_ADMIN,
+							'created_at' => date('Y-m-d H:i:s')
+						]);
+					
+					Session::set('success', 'Registration successful. Please login.');
+					$this->redirect('/admin/login');
+				}
 			}
 			
-			// If form is not submitted, render the registration page without errors
-			$this->render('auth/register.html', ['title' => 'Register']);
+			$this->render(
+				'auth/register.html', [
+				'form'   => $form->render(),
+				'title'  => 'Register',
+				'errors' => $form->getErrors()
+			]);
 		}
 		
 		public function dashboard()
 		{
-			echo "Admin dashboard!";
 			
-			var_dump($_SESSION);
+			$userModel = new User();
+			$user      = $userModel->findBy(['id' => Session::get('admin')]);
+			
+			$blogModel = new Blog();
+			$blogPosts = $blogModel->getAll();
+			
+			$placeholders = [
+				'title' => 'Admin Dashboard',
+				'posts' => $blogPosts,
+			];
+			
+			$placeholders = array_merge($placeholders, $user);
+			
+			$this->render('admin/dashboard.html', $placeholders);
+		}
+		
+		public function recoverPassword(Request $request)
+		{
+			$form = new Form();
+			$form->setMethod('POST');
+			$form->setAction('/admin/forgot-password');
+			$form->addField(
+				'email', 'email', 'Email', '', [
+				'required'    => 'required',
+				'placeholder' => 'Enter email',
+				'class'       => 'form-control',
+			]);
+			$form->setSubmitButtonName('Send Recovery Email');
+			
+			$form->handle($request);
+			
+			if ($form->isSubmitted() && $form->validate($request)) {
+				$formData = $request->getFormData();
+				
+				// send password recover email
+				$mailService = new EmailService();
+				$mailService->sendPasswordResetEmail($formData['email']);
+				Session::set('message', "if an account exists with email {$formData['email']} a reset password email will be sent.");
+				$form->clearForm($request);
+				$this->redirect('/admin/forgot-password');
+			}
+			
+			$this->render(
+				'auth/recover_password.html', [
+				'form'   => $form->render(),
+				'title'  => 'Recover Password',
+				'errors' => $form->getErrors(),
+			]);
+		}
+		
+		public function resetPassword(Request $request, $resetToken): void
+		{
+			
+			$userModel = new User();
+			$user      = $userModel->findBy(['reset_token' => $resetToken]);
+			
+			if (!empty($user)) {
+				
+				if ($user['token_expiry'] < date('Y-m-d H:i:s')) {
+					// Token has expired
+					Session::set('message', 'Reset token expired.');
+					
+				} else {
+					
+					$form = new Form();
+					
+					$form->setMethod('POST');
+					$form->setAction('/reset-password/' . $user['reset_token']);
+					$form->addField('password', 'password', 'New Password', null, ['required' => true]);
+					$form->addField('password', 'password2', 'Confirm Password', null, ['required' => true]);
+					$form->setSubmitButtonName('Reset Password');
+					
+					$form->handle($request);
+					
+					if ($form->isSubmitted() && $form->validate($request)) {
+						
+						$formData       = $form->getFormData();
+						$hashedPassword = password_hash($formData['password'], PASSWORD_BCRYPT);
+						
+						$userModel->update($user['id'], ['password' => $hashedPassword]);
+						
+						Session::set('message', 'Your password has been reset. Please login.');
+						
+						$this->redirect('/admin/login');
+					}
+					
+					$this->render(
+						'auth/reset_password.html', [
+						'form'  => $form->render(),
+						'title' => 'Reset Password'
+					]);
+				}
+				
+			} else {
+				Session::set('message', 'Reset token invalid.');
+			}
+			
+			$this->render('notice.html');
+			
 		}
 		
 	}

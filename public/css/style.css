@@ -237,3 +237,10 @@ form .success {
     margin-bottom: 10px;
     display: block;
 }
+
+.login .links,
+.register .links {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}

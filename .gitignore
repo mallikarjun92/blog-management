@@ -6,3 +6,5 @@ php.xml
 vcs.xml
 codeStyleConfig..xml
 /.idea/codeStyles/codeStyleConfig.xml
+mails/
+/cache

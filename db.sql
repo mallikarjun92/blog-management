@@ -4,7 +4,8 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     email VARCHAR(150),
     role ENUM('admin', 'user') DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP DEFAULT NULL
 );
 
 CREATE TABLE blog_posts (
@@ -27,3 +28,7 @@ CREATE TABLE comments (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status ENUM('approved', 'pending') DEFAULT 'pending'
 );
+
+ALTER TABLE users
+    ADD COLUMN reset_token VARCHAR(45) NULL AFTER last_login,
+ADD COLUMN token_expiry DATETIME NULL AFTER reset_token;

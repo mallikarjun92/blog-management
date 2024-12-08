@@ -16,5 +16,8 @@
             "name": "Mallikarjun",
             "email": "mallikarjun016.rymec@gmail.com"
         }
-    ]
+    ],
+    "config": {
+        "process-timeout": 9000
+    }
 }

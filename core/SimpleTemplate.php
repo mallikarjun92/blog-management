@@ -7,7 +7,10 @@ class SimpleTemplate
     public function render($template, $data = [])
     {
         $templatePath = __DIR__ . '/../app/views/' . $template;
-
+		
+		$data = array_merge($data, ['username' => Session::get('username'), 'message' => Session::get('message')]);
+		Session::delete('message');
+		
         if (!file_exists($templatePath)) {
             die("Template file not found: $template");
         }
@@ -86,22 +89,21 @@ class SimpleTemplate
                 $ifContent = $matches[2];
                 $elseContent = isset($matches[4]) ? $matches[4] : '';
 
-                if(array_key_exists($condition, $data)) {
-                    // Replace variables in the condition
-                    foreach ($data as $key => $value) {
-                        if (is_string($value) || is_numeric($value)) {
-                            $condition = str_replace($key, "'$value'", $condition);
-                        } elseif (is_array($value)) {
-                            $condition = str_replace("count($key)", count($value), $condition);
-                        }
+				
+                // Replace variables in the condition
+                foreach ($data as $key => $value) {
+                    if (is_string($value) || is_numeric($value)) {
+                        $condition = str_replace($key, "'$value'", $condition);
+                    } elseif (is_array($value)) {
+                        $condition = str_replace("count($key)", count($value), $condition);
                     }
-
-                    // Evaluate the condition safely
-                    $result = eval("return ($condition);");
+                    else {
+                        $condition = str_replace($key, $value, $condition);
+                    }
                 }
-                else {
-                    $result = false;
-                }
+				
+                // Evaluate the condition safely
+                $result = eval('return ($condition);');
 
                 // Return the appropriate content and strip out template markers
                 return $result ? $ifContent : $elseContent;
