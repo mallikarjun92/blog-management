@@ -13,7 +13,7 @@
 		
 		public function get($key, $default = null)
 		{
-			return $this->request[$key] ?? $default;
+			return filter_var($this->request[$key], FILTER_SANITIZE_STRING) ?? $default;
 		}
 		
 		public function all(): array

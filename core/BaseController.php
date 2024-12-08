@@ -2,7 +2,6 @@
 namespace Core;
 
 use Core\SimpleTemplate;
-use JetBrains\PhpStorm\NoReturn;
 
 class BaseController {
 

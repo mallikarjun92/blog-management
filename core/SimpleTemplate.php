@@ -103,8 +103,8 @@ class SimpleTemplate
                 }
 				
                 // Evaluate the condition safely
-                $result = eval('return ($condition);');
-
+                $result = eval("return ".($condition).";");
+				
                 // Return the appropriate content and strip out template markers
                 return $result ? $ifContent : $elseContent;
             },
