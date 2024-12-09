@@ -22,7 +22,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Title</th>
-                                <th>Description</th>
+                                <th>Content</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -32,6 +33,7 @@
                                 <td>{{ post.id }}</td>
                                 <td>{{ post.title }}</td>
                                 <td>{{ post.content }}</td>
+                                <td>{{ post.status_text }}</td>
                                 <td>
                                     <a href="/admin/post/edit/{{ post.id }}" class="btn btn-primary btn-sm">Edit</a>
                                     <a href="/admin/post/delete/{{ post.id }}" class="btn btn-danger btn-sm">Delete</a>
@@ -59,7 +61,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Title</th>
-                                <th>Description</th>
+                                <th>Content</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -69,6 +72,7 @@
                                 <td>{{ comment.id }}</td>
                                 <td>{{ comment.title }}</td>
                                 <td>{{ comment.content }}</td>
+                                <td>{{ comment.status_text }}</td>
                                 <td>
                                     <a href="/comments/edit/{{ comment.id }}" class="btn btn-primary btn-sm">Edit</a>
                                     <a href="/comments/delete/{{ comment.id }}" class="btn btn-danger btn-sm">Delete</a>

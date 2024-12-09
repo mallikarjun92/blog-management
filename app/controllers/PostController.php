@@ -7,6 +7,7 @@
 	use App\services\BlogDataService;
 	use Core\BaseController;
 	use Core\Form;
+	use Core\PaginationHelper;
 	use Core\Request;
 	use Core\Session;
 	
@@ -14,16 +15,25 @@
 	{
 		public function index(Request $request)
 		{
+			
+			$postsPerPage = 10;
+			$currentPage  = $request->get('page', 1);
+			$offset       = ($currentPage - 1) * $postsPerPage;
+			
 			$postsModel = new Blog();
-			$posts = $postsModel->getAll();
+			$posts      = $postsModel->getAll($postsPerPage, $offset);
+			$totalPosts = $postsModel->countAll();
+			$totalPages = ceil($totalPosts / $postsPerPage);
 			
 			foreach ($posts as &$post) {
 				$post = (new BlogDataService())->getBlogDataForDashboard($post);
 			}
 			
-			$this->render('admin/posts.html', [
-				'posts' => $posts,
-				'title' => 'Blog Management',
+			$this->render(
+				'admin/posts.html', [
+				'posts'           => $posts,
+				'title'           => 'Blog Management',
+				'paginationLinks' => PaginationHelper::createPaginationLinks($currentPage, $totalPages, '/admin/posts')
 			]);
 		}
 		
@@ -107,7 +117,7 @@
 				$updateData = [
 					'title'     => $formData['title'],
 					'content'   => $formData['content'],
-					'image'     => isset($formData['image']) ? $formData['image'] : $post['image'], // Use existing image if no new image is uploaded
+					'image'     => $formData['image'] ?? $post['image'], // Use existing image if no new image is uploaded
 					'author_id' => Session::get('admin'),
 				];
 				
@@ -163,8 +173,9 @@
 			$data = $blogDataService->getBlogData($post, $author);
 			
 			$placeholders = [
-				'title' => 'View Post',
-				'data'  => [$data],
+				'title'  => 'View Post',
+				'status' => $post['status'],
+				'data'   => [$data],
 			];
 			if (!$post) {
 				
@@ -177,6 +188,29 @@
 					'admin/post.html',
 					$placeholders
 				);
+			}
+		}
+		
+		public function publish(Request $request, $id): void
+		{
+			$blogModel = new Blog();
+			$post      = $blogModel->getById($id);
+			if (!$post) {
+				
+				Session::set('error', 'Post not found');
+				$this->redirect('/admin/posts');
+				
+			} else {
+				
+				Session::set('message', 'Post has been published');
+				
+				$blogModel->update(
+					$id, [
+					'status'       => $blogModel::BLOG_STATUS['published'],
+					'publish_date' => date('Y-m-d h:i:s')
+				]);
+				
+				$this->redirect('/admin/post/view/' . $id);
 			}
 		}
 		

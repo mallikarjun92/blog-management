@@ -37,25 +37,5 @@ class BlogController extends BaseController
         ]);
 
     }
-
-    // Handle the creation of a new blog post
-    /*public function create()
-    {
-        // Placeholder: Display a form to create a new blog post or handle form submission
-        echo "Creating a new blog post.";
-    }
-
-    // Handle the editing of an existing blog post
-    public function edit($id)
-    {
-        // Placeholder: Fetch the post data for the given ID and display an edit form
-        echo "Editing the blog post with ID: $id.";
-    }
-
-    // Handle the deletion of a blog post
-    public function delete($id)
-    {
-        // Placeholder: Delete the blog post with the given ID
-        echo "Deleting the blog post with ID: $id.";
-    }*/
+	
 }

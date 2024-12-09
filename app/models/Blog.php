@@ -65,11 +65,20 @@
 		 */
 		public function getById($id)
 		{
-			$sql  = "SELECT * FROM blog_posts WHERE id = :id AND status = 'published'";
+			$sql  = "SELECT * FROM blog_posts WHERE id = :id";
 			$stmt = $this->db->prepare($sql);
 			$stmt->bindValue(':id', $id, \PDO::PARAM_INT);
 			$stmt->execute();
 			
 			return $stmt->fetch(\PDO::FETCH_ASSOC);
+		}
+		
+		public function countAll()
+		{
+			$sql  = "SELECT COUNT(id) FROM blog_posts";
+			$stmt = $this->db->prepare($sql);
+			$stmt->execute();
+			
+			return $stmt->fetchColumn();
 		}
 	}

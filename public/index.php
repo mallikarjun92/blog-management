@@ -26,7 +26,7 @@ $router->add('/post/edit/{id}', 'BlogController', 'edit', ['GET', 'POST']);
 $router->add('/post/delete/{id}', 'BlogController', 'delete', ['POST']);*/
 
 // Admin routes
-$router->add('/admin/register', 'AdminController', 'register', ['GET', 'POST']); // Admin login
+$router->add('/admin/register', 'AdminController', 'register', ['GET', 'POST']); // Admin register
 $router->add('/admin/login', 'AdminController', 'login', ['GET', 'POST']); // Admin login
 $router->add('/admin/logout', 'AdminController', 'logout', ['GET', 'POST']); // Admin logout
 $router->add('/admin/dashboard', 'AdminController', 'dashboard', ['GET']); // Admin dashboard
@@ -39,6 +39,7 @@ $router->add('/admin/post/create', 'PostController', 'create', ['GET', 'POST']);
 $router->add('/admin/post/view/{id}', 'PostController', 'show', ['GET']); // Show post
 $router->add('/admin/post/edit/{id}', 'PostController', 'edit', ['GET', 'POST']); // Edit a post
 $router->add('/admin/post/delete/{id}', 'PostController', 'delete', ['GET', 'POST']); // Delete a post
+$router->add('/admin/post/publish/{id}', 'PostController', 'publish', ['GET', 'POST']); // Publish a post
 $router->add('/admin/comments/{id}', 'CommentController', 'moderate', ['GET', 'POST']); // Moderate comments
 $router->add('/admin/users', 'UserController', 'index', ['GET', 'POST']); // Manage users
 
