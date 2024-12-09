@@ -13,6 +13,10 @@
 		
 		public function get($key, $default = null)
 		{
+			if (!array_key_exists($key, $this->request)) {
+				return $default;
+			}
+			
 			return filter_var($this->request[$key], FILTER_SANITIZE_STRING) ?? $default;
 		}
 		
