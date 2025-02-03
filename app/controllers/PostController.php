@@ -164,25 +164,26 @@
 		{
 			$blogModel = new Blog();
 			$post      = $blogModel->getById($id);
-			
-			$userModel = new User();
-			$author = $userModel->getById($post['author_id']);
-			
-			$blogDataService = new BlogDataService();
-			
-			$data = $blogDataService->getBlogData($post, $author);
-			
-			$placeholders = [
-				'title'  => 'View Post',
-				'status' => $post['status'],
-				'data'   => [$data],
-			];
+
 			if (!$post) {
 				
 				Session::set('error', 'Post not found');
 				$this->redirect('/admin/posts');
 				
 			} else {
+				
+				$userModel = new User();
+				$author = $userModel->getById($post['author_id']);
+				
+				$blogDataService = new BlogDataService();
+				
+				$data = $blogDataService->getBlogData($post, $author);
+				
+				$placeholders = [
+					'title'  => 'View Post',
+					'status' => $post['status'],
+					'data'   => [$data],
+				];
 				
 				$this->render(
 					'admin/post.html',
